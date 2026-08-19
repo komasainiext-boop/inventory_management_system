@@ -1,8 +1,9 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
-
-import ForgotPassword from '../components/ForgetPassword';
-import Login from '../components/login'
-import Register from '../components/Register';
+import { Navigate, Route, Routes } from "react-router-dom";
+import NotFound from "../components/NotFound";
+import Dashboard from "../components/Dashboard";
+import ForgotPassword from "../components/ForgetPassword";
+import Login from "../components/login";
+import Register from "../components/Register";
 
 const AppRoutes = (): React.ReactElement => {
   return (
@@ -11,15 +12,9 @@ const AppRoutes = (): React.ReactElement => {
 
       <Route path="/register" element={<Register />} />
 
-      <Route
-        path="/forgot-password"
-        element={<ForgotPassword />}
-      />
-
-      <Route
-        path="*"
-        element={<Navigate to="/login" replace />}
-      />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
