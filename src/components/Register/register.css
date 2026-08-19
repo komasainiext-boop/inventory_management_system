@@ -1,0 +1,50 @@
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background-color: #f5f7fa;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 480px;
+  padding: 32px;
+}
+
+.register-title {
+  text-align: center;
+  color: #172b4d;
+  margin-bottom: 8px;
+}
+
+.register-subtitle {
+  text-align: center;
+  color: #425466;
+  margin-bottom: 24px;
+}
+
+.register-alert {
+  margin-bottom: 20px;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (max-width: 480px) {
+  .register-page {
+    padding: 16px;
+  }
+
+  .register-card {
+    padding: 24px 16px;
+  }
+
+  .register-title {
+    font-size: 1.6rem;
+  }
+}
