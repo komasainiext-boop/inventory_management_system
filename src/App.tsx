@@ -1,13 +1,16 @@
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from "react-router-dom";
 
-import { AuthProvider } from './context/AuthContext';
-import AppRoutes from './routes/AppRoutes';
+import { AuthProvider } from "./context/AuthContext";
+import { ProfileProvider } from "./context/ProfileContext";
+import AppRoutes from "./routes/AppRoutes";
 
 const App = (): React.ReactElement => {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppRoutes />
+        <ProfileProvider>
+          <AppRoutes />
+        </ProfileProvider>
       </AuthProvider>
     </BrowserRouter>
   );

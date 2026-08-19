@@ -1,63 +1,26 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-} from '@mui/material';
-import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
-import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
+import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
+import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
 
-import './Dashboard.css';
+import { dashboardCards } from "../../stubs/dashboardStub";
+import type { DashboardCard } from "../../types/dashboard";
 
-interface DashboardCard {
-  id: string;
-  title: string;
-  value: number;
-  description: string;
-}
-
-const dashboardCards: DashboardCard[] = [
-  {
-    id: 'total-products',
-    title: 'Total Products',
-    value: 248,
-    description: 'Products currently in inventory',
-  },
-  {
-    id: 'low-stock',
-    title: 'Low Stock',
-    value: 18,
-    description: 'Products need restocking',
-  },
-  {
-    id: 'orders',
-    title: 'Orders',
-    value: 76,
-    description: 'Orders processed this month',
-  },
-  {
-    id: 'users',
-    title: 'Users',
-    value: 32,
-    description: 'Registered system users',
-  },
-];
+import "./Dashboard.css";
 
 const getCardIcon = (id: string): React.ReactElement => {
   switch (id) {
-    case 'total-products':
+    case "total-products":
       return <Inventory2OutlinedIcon aria-hidden="true" />;
 
-    case 'low-stock':
+    case "low-stock":
       return <WarningAmberOutlinedIcon aria-hidden="true" />;
 
-    case 'orders':
+    case "orders":
       return <ShoppingCartOutlinedIcon aria-hidden="true" />;
 
-    case 'users':
+    case "users":
       return <PeopleOutlineOutlinedIcon aria-hidden="true" />;
 
     default:
@@ -91,27 +54,17 @@ const Dashboard = (): React.ReactElement => {
         </Typography>
       </Box>
 
-      <Grid
-        container
-        spacing={3}
-        aria-label="Inventory statistics"
-      >
+      <Grid container spacing={3} aria-label="Inventory statistics">
         {dashboardCards.map(
           (card: DashboardCard): React.ReactElement => (
-            <Grid
-              key={card.id}
-              size={{ xs: 12, sm: 6, md: 3 }}
-            >
+            <Grid key={card.id} size={{ xs: 12, sm: 6, md: 3 }}>
               <Card
                 component="article"
                 className="dashboard-card"
                 elevation={2}
               >
                 <CardContent className="dashboard-card-content">
-                  <Box
-                    className="dashboard-card-icon"
-                    aria-hidden="true"
-                  >
+                  <Box className="dashboard-card-icon" aria-hidden="true">
                     {getCardIcon(card.id)}
                   </Box>
 
