@@ -1,0 +1,10 @@
+{
+  "name": "Inventory Management System",
+  "short_name": "Inventory",
+  "description": "Inventory Management System",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f7fa",
+  "theme_color": "#1976d2",
+  "orientation": "portrait-primary"
+}
