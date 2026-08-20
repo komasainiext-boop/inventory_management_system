@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import Dashboard from "../components/Dashboard";
 import ForgotPassword from "../components/ForgetPassword";
@@ -12,6 +12,9 @@ import ProtectedRoute from "./ProtectedRoute";
 const AppRoutes = (): React.ReactElement => {
   return (
     <Routes>
+      {/* Default route */}
+      <Route path="/" element={<Navigate to="/login" replace />} />
+
       {/* Public Routes */}
       <Route path="/login" element={<Login />} />
 

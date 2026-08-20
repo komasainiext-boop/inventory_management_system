@@ -1,4 +1,5 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from "react";
+
 import {
   Alert,
   Box,
@@ -8,48 +9,48 @@ import {
   Paper,
   TextField,
   Typography,
-} from '@mui/material';
-import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
+} from "@mui/material";
 
-import { useAuth } from '../../context/AuthContext';
-import { mockAuthResponse } from '../../stubs/authStub';
-import type { LoginFormValues } from '../../types/auth';
+import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 
-import './Login.css';
+import { useAuth } from "../../context/AuthContext";
+import { mockAuthResponse } from "../../stubs/authStub";
+import type { LoginFormValues } from "../../types/auth";
+
+import "./Login.css";
 
 interface LoginProps {
   onForgotPassword?: () => void;
 }
 
-const loginValidationSchema: Yup.ObjectSchema<LoginFormValues> =
-  Yup.object({
-    email: Yup.string()
-      .email('Please enter a valid email address')
-      .required('Email address is required'),
+const loginValidationSchema: Yup.ObjectSchema<LoginFormValues> = Yup.object({
+  email: Yup.string()
+    .email("Please enter a valid email address")
+    .required("Email address is required"),
 
-    password: Yup.string()
-      .min(8, 'Password must contain at least 8 characters')
-      .required('Password is required'),
-  });
+  password: Yup.string()
+    .min(8, "Password must contain at least 8 characters")
+    .required("Password is required"),
+});
 
 const Login = ({ onForgotPassword }: LoginProps): React.ReactElement => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [apiError, setApiError] = useState<string>('');
+  const [apiError, setApiError] = useState<string>("");
 
   const formik = useFormik<LoginFormValues>({
     initialValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
 
     validationSchema: loginValidationSchema,
 
     onSubmit: async (): Promise<void> => {
-      setApiError('');
+      setApiError("");
 
       try {
         await new Promise<void>((resolve) => {
@@ -57,9 +58,9 @@ const Login = ({ onForgotPassword }: LoginProps): React.ReactElement => {
         });
 
         login(mockAuthResponse.token);
-        navigate('/dashboard');
+        navigate("/dashboard");
       } catch {
-        setApiError('Unable to sign in. Please try again.');
+        setApiError("Unable to sign in. Please try again.");
       }
     },
   });
@@ -89,14 +90,10 @@ const Login = ({ onForgotPassword }: LoginProps): React.ReactElement => {
           variant="h4"
           className="login-title"
         >
-          Inventory Management System
+          Sign In
         </Typography>
 
-        <Typography
-          component="p"
-          variant="body1"
-          className="login-subtitle"
-        >
+        <Typography component="p" variant="body1" className="login-subtitle">
           Sign in to continue
         </Typography>
 
@@ -121,7 +118,7 @@ const Login = ({ onForgotPassword }: LoginProps): React.ReactElement => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={emailHasError}
-            helperText={emailHasError ? formik.errors.email : ''}
+            helperText={emailHasError ? formik.errors.email : ""}
             autoComplete="email"
             fullWidth
             required
@@ -136,7 +133,7 @@ const Login = ({ onForgotPassword }: LoginProps): React.ReactElement => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={passwordHasError}
-            helperText={passwordHasError ? formik.errors.password : ''}
+            helperText={passwordHasError ? formik.errors.password : ""}
             autoComplete="current-password"
             fullWidth
             required
@@ -157,26 +154,26 @@ const Login = ({ onForgotPassword }: LoginProps): React.ReactElement => {
                 aria-label="Signing in"
               />
             ) : (
-              'Sign In'
+              "Sign In"
             )}
           </Button>
 
           <Link
-            component="button"
-            type="button"
+            component="a"
+            href="/forgot-password"
             className="login-link"
-            onClick={onForgotPassword}
+            onClick={(event) => {
+              if (onForgotPassword) {
+                event.preventDefault();
+                onForgotPassword();
+              }
+            }}
           >
             Forgot password?
           </Link>
 
-          <Link
-            component="button"
-            type="button"
-            className="login-link"
-            onClick={() => navigate('/register')}
-          >
-            Create an account
+          <Link component="a" href="/register" className="login-link">
+            Sign Up
           </Link>
         </Box>
       </Paper>

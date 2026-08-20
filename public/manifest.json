@@ -2,9 +2,53 @@
   "name": "Inventory Management System",
   "short_name": "Inventory",
   "description": "Inventory Management System",
-  "start_url": "/",
+  "start_url": "/login",
+  "scope": "/",
   "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
   "background_color": "#f5f7fa",
   "theme_color": "#1976d2",
-  "orientation": "portrait-primary"
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1076x831",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Inventory Management System desktop login"
+    },
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "1170x2532",
+      "type": "image/png",
+      "label": "Inventory Management System mobile login"
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+inventory",
+      "url": "/login?protocol=%s"
+    }
+  ]
 }
