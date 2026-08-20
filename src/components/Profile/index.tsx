@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import { useFormik } from 'formik';
+import { useEffect, useMemo, useState } from "react";
+
+import { useFormik } from "formik";
+
 import {
   Alert,
   Avatar,
@@ -16,21 +18,12 @@ import {
   Grid,
   TextField,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
 
-import { useProfile } from '../../context/ProfileContext';
-import type { ProfileFormValues } from '../../types/profile';
+import { useProfile } from "../../context/useProfile";
+import type { ProfileFormValues } from "../../types/profile";
 
-import './Profile.css';
-
-const initialValues: ProfileFormValues = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  role: '',
-  avatarUrl: '',
-};
+import "./Profile.css";
 
 interface ProfileFormErrors {
   firstName?: string;
@@ -40,35 +33,40 @@ interface ProfileFormErrors {
   role?: string;
 }
 
-const validate = (
-  values: ProfileFormValues,
-): ProfileFormErrors => {
+const emptyInitialValues: ProfileFormValues = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  role: "",
+  avatarUrl: "",
+};
+
+const validate = (values: ProfileFormValues): ProfileFormErrors => {
   const errors: ProfileFormErrors = {};
 
   if (!values.firstName.trim()) {
-    errors.firstName = 'First name is required';
+    errors.firstName = "First name is required";
   }
 
   if (!values.lastName.trim()) {
-    errors.lastName = 'Last name is required';
+    errors.lastName = "Last name is required";
   }
 
   if (!values.email.trim()) {
-    errors.email = 'Email is required';
-  } else if (
-    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)
-  ) {
-    errors.email = 'Enter a valid email address';
+    errors.email = "Email is required";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+    errors.email = "Enter a valid email address";
   }
 
   if (!values.phone.trim()) {
-    errors.phone = 'Phone number is required';
+    errors.phone = "Phone number is required";
   } else if (!/^\+?[0-9\s-]{10,15}$/.test(values.phone)) {
-    errors.phone = 'Enter a valid phone number';
+    errors.phone = "Enter a valid phone number";
   }
 
   if (!values.role.trim()) {
-    errors.role = 'Role is required';
+    errors.role = "Role is required";
   }
 
   return errors;
@@ -85,18 +83,28 @@ const Profile = (): React.ReactElement => {
     deleteProfile,
   } = useProfile();
 
-  const [deleteDialogOpen, setDeleteDialogOpen] =
-    useState<boolean>(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    void loadProfile();
-  }, [loadProfile]);
+  const formInitialValues = useMemo<ProfileFormValues>(() => {
+    if (profile === null) {
+      return emptyInitialValues;
+    }
+
+    return {
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      email: profile.email,
+      phone: profile.phone,
+      role: profile.role,
+      avatarUrl: profile.avatarUrl,
+    };
+  }, [profile]);
 
   const formik = useFormik<ProfileFormValues>({
-    initialValues,
+    initialValues: formInitialValues,
     enableReinitialize: true,
     validate,
-    onSubmit: async (values) => {
+    onSubmit: async (values): Promise<void> => {
       if (profile === null) {
         await createProfile(values);
       } else {
@@ -106,17 +114,8 @@ const Profile = (): React.ReactElement => {
   });
 
   useEffect(() => {
-    if (profile !== null) {
-      formik.setValues({
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        email: profile.email,
-        phone: profile.phone,
-        role: profile.role,
-        avatarUrl: profile.avatarUrl,
-      });
-    }
-  }, [profile]);
+    void loadProfile();
+  }, [loadProfile]);
 
   const handleAvatarChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -129,11 +128,12 @@ const Profile = (): React.ReactElement => {
 
     const imageUrl = URL.createObjectURL(file);
 
-    formik.setFieldValue('avatarUrl', imageUrl);
+    void formik.setFieldValue("avatarUrl", imageUrl);
   };
 
   const handleDelete = async (): Promise<void> => {
     await deleteProfile();
+
     setDeleteDialogOpen(false);
     formik.resetForm();
   };
@@ -146,9 +146,7 @@ const Profile = (): React.ReactElement => {
         aria-label="Loading profile"
       >
         <CircularProgress />
-        <Typography component="p">
-          Loading profile...
-        </Typography>
+        <Typography component="p">Loading profile...</Typography>
       </Box>
     );
   }
@@ -160,11 +158,7 @@ const Profile = (): React.ReactElement => {
       aria-labelledby="profile-title"
     >
       <Box className="profile-header">
-        <Typography
-          id="profile-title"
-          component="h1"
-          variant="h4"
-        >
+        <Typography id="profile-title" component="h1" variant="h4">
           User Profile
         </Typography>
 
@@ -174,11 +168,7 @@ const Profile = (): React.ReactElement => {
       </Box>
 
       {error !== null && (
-        <Alert
-          severity="error"
-          className="profile-alert"
-          role="alert"
-        >
+        <Alert severity="error" className="profile-alert" role="alert">
           {error}
         </Alert>
       )}
@@ -227,13 +217,10 @@ const Profile = (): React.ReactElement => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   error={
-                    formik.touched.firstName &&
-                    Boolean(formik.errors.firstName)
+                    formik.touched.firstName && Boolean(formik.errors.firstName)
                   }
                   helperText={
-                    formik.touched.firstName
-                      ? formik.errors.firstName
-                      : ''
+                    formik.touched.firstName ? formik.errors.firstName : ""
                   }
                   required
                 />
@@ -249,13 +236,10 @@ const Profile = (): React.ReactElement => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   error={
-                    formik.touched.lastName &&
-                    Boolean(formik.errors.lastName)
+                    formik.touched.lastName && Boolean(formik.errors.lastName)
                   }
                   helperText={
-                    formik.touched.lastName
-                      ? formik.errors.lastName
-                      : ''
+                    formik.touched.lastName ? formik.errors.lastName : ""
                   }
                   required
                 />
@@ -271,15 +255,8 @@ const Profile = (): React.ReactElement => {
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.email &&
-                    Boolean(formik.errors.email)
-                  }
-                  helperText={
-                    formik.touched.email
-                      ? formik.errors.email
-                      : ''
-                  }
+                  error={formik.touched.email && Boolean(formik.errors.email)}
+                  helperText={formik.touched.email ? formik.errors.email : ""}
                   required
                 />
               </Grid>
@@ -293,15 +270,8 @@ const Profile = (): React.ReactElement => {
                   value={formik.values.phone}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.phone &&
-                    Boolean(formik.errors.phone)
-                  }
-                  helperText={
-                    formik.touched.phone
-                      ? formik.errors.phone
-                      : ''
-                  }
+                  error={formik.touched.phone && Boolean(formik.errors.phone)}
+                  helperText={formik.touched.phone ? formik.errors.phone : ""}
                   required
                 />
               </Grid>
@@ -315,15 +285,8 @@ const Profile = (): React.ReactElement => {
                   value={formik.values.role}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.role &&
-                    Boolean(formik.errors.role)
-                  }
-                  helperText={
-                    formik.touched.role
-                      ? formik.errors.role
-                      : ''
-                  }
+                  error={formik.touched.role && Boolean(formik.errors.role)}
+                  helperText={formik.touched.role ? formik.errors.role : ""}
                   required
                 />
               </Grid>
@@ -335,9 +298,7 @@ const Profile = (): React.ReactElement => {
                 variant="contained"
                 disabled={formik.isSubmitting || loading}
               >
-                {profile === null
-                  ? 'Create Profile'
-                  : 'Update Profile'}
+                {profile === null ? "Create Profile" : "Update Profile"}
               </Button>
 
               {profile !== null && (
@@ -362,22 +323,17 @@ const Profile = (): React.ReactElement => {
         aria-labelledby="delete-profile-title"
         aria-describedby="delete-profile-description"
       >
-        <DialogTitle id="delete-profile-title">
-          Delete Profile?
-        </DialogTitle>
+        <DialogTitle id="delete-profile-title">Delete Profile?</DialogTitle>
 
         <DialogContent>
           <DialogContentText id="delete-profile-description">
-            Are you sure you want to delete this profile?
-            This action cannot be undone.
+            Are you sure you want to delete this profile? This action cannot be
+            undone.
           </DialogContentText>
         </DialogContent>
 
         <DialogActions>
-          <Button
-            type="button"
-            onClick={() => setDeleteDialogOpen(false)}
-          >
+          <Button type="button" onClick={() => setDeleteDialogOpen(false)}>
             Cancel
           </Button>
 

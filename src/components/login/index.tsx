@@ -15,7 +15,7 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { mockAuthResponse } from "../../stubs/authStub";
 import type { LoginFormValues } from "../../types/auth";
 
@@ -163,7 +163,7 @@ const Login = ({ onForgotPassword }: LoginProps): React.ReactElement => {
             href="/forgot-password"
             className="login-link"
             onClick={(event) => {
-              if (onForgotPassword) {
+              if (onForgotPassword !== undefined) {
                 event.preventDefault();
                 onForgotPassword();
               }

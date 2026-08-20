@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from 'react';
+import { useState, type FormEvent } from "react";
 import {
   Alert,
   Box,
@@ -6,44 +6,43 @@ import {
   Paper,
   TextField,
   Typography,
-} from '@mui/material';
-import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
+} from "@mui/material";
+import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 
-import './ForgotPassword.css';
+import type { ForgotPasswordFormValues } from "../../types/auth";
 
-interface ForgotPasswordFormValues {
-  email: string;
-}
+import "./ForgotPassword.css";
 
-const validationSchema: Yup.ObjectSchema<ForgotPasswordFormValues> =
-  Yup.object({
+const validationSchema: Yup.ObjectSchema<ForgotPasswordFormValues> = Yup.object(
+  {
     email: Yup.string()
-      .email('Please enter a valid email address')
-      .required('Email address is required'),
-  });
+      .email("Please enter a valid email address")
+      .required("Email address is required"),
+  },
+);
 
 const ForgotPassword = (): React.ReactElement => {
   const navigate = useNavigate();
-  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>("");
 
   const formik = useFormik<ForgotPasswordFormValues>({
     initialValues: {
-      email: '',
+      email: "",
     },
 
     validationSchema,
 
     onSubmit: async (): Promise<void> => {
-      setSuccessMessage('');
+      setSuccessMessage("");
 
       await new Promise<void>((resolve) => {
         window.setTimeout(resolve, 500);
       });
 
       setSuccessMessage(
-        'If an account exists with this email, password reset instructions have been sent.',
+        "If an account exists with this email, password reset instructions have been sent.",
       );
     },
   });
@@ -75,8 +74,8 @@ const ForgotPassword = (): React.ReactElement => {
           variant="body1"
           className="forgot-password-description"
         >
-          Enter your registered email address and we will send you
-          instructions to reset your password.
+          Enter your registered email address and we will send you instructions
+          to reset your password.
         </Typography>
 
         {successMessage.length > 0 && (
@@ -104,13 +103,10 @@ const ForgotPassword = (): React.ReactElement => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
-              formik.touched.email === true &&
-              Boolean(formik.errors.email)
+              formik.touched.email === true && Boolean(formik.errors.email)
             }
             helperText={
-              formik.touched.email === true
-                ? formik.errors.email
-                : ''
+              formik.touched.email === true ? formik.errors.email : ""
             }
             autoComplete="email"
             fullWidth
@@ -124,13 +120,13 @@ const ForgotPassword = (): React.ReactElement => {
             fullWidth
             disabled={formik.isSubmitting}
           >
-            Send Reset Instructions
+            {formik.isSubmitting ? "Sending..." : "Send Reset Instructions"}
           </Button>
 
           <Button
             type="button"
             variant="text"
-            onClick={() => navigate('/login')}
+            onClick={() => navigate("/login")}
           >
             Back to Login
           </Button>
