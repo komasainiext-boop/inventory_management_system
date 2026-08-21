@@ -104,7 +104,10 @@ const Profile = (): React.ReactElement => {
     initialValues: formInitialValues,
     enableReinitialize: true,
     validate,
+
     onSubmit: async (values): Promise<void> => {
+      console.log("PROFILE FORM SUBMIT:", values);
+
       if (profile === null) {
         await createProfile(values);
       } else {
@@ -129,6 +132,12 @@ const Profile = (): React.ReactElement => {
     const imageUrl = URL.createObjectURL(file);
 
     void formik.setFieldValue("avatarUrl", imageUrl);
+  };
+
+  const handleUpdateClick = (): void => {
+    console.log("UPDATE BUTTON CLICKED");
+
+    void formik.submitForm();
   };
 
   const handleDelete = async (): Promise<void> => {
@@ -202,7 +211,10 @@ const Profile = (): React.ReactElement => {
 
           <Box
             component="form"
-            onSubmit={formik.handleSubmit}
+            onSubmit={(event) => {
+              event.preventDefault();
+              void formik.submitForm();
+            }}
             noValidate
             className="profile-form"
           >
@@ -294,9 +306,10 @@ const Profile = (): React.ReactElement => {
 
             <Box className="profile-actions">
               <Button
-                type="submit"
+                type="button"
                 variant="contained"
                 disabled={formik.isSubmitting || loading}
+                onClick={handleUpdateClick}
               >
                 {profile === null ? "Create Profile" : "Update Profile"}
               </Button>

@@ -1,7 +1,9 @@
+
 {
   "name": "Inventory Management System",
   "short_name": "Inventory",
   "description": "Inventory Management System",
+  "id": "/login",
   "start_url": "/login",
   "scope": "/",
   "display": "standalone",
@@ -52,3 +54,4 @@
     }
   ]
 }
+

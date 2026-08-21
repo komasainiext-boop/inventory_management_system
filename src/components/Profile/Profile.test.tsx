@@ -3,7 +3,30 @@ import userEvent from "@testing-library/user-event";
 import { ProfileProvider } from "../../context/ProfileContext";
 import Profile from "./index";
 
+const TEST_PROFILE = {
+  id: "USR-001",
+  firstName: "Inventory",
+  lastName: "Manager",
+  email: "manager@example.com",
+  phone: "+91 9876543210",
+  role: "Inventory Manager",
+  avatarUrl: "",
+};
+
 describe("Profile component", () => {
+  beforeEach(() => {
+    localStorage.clear();
+
+    localStorage.setItem(
+      "inventory_user_profile",
+      JSON.stringify(TEST_PROFILE),
+    );
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+  });
+
   const renderProfile = (): void => {
     render(
       <ProfileProvider>
@@ -25,25 +48,15 @@ describe("Profile component", () => {
   test("loads and displays profile information", async () => {
     renderProfile();
 
-    expect(
-      await screen.findByDisplayValue("Inventory"),
-    ).toBeInTheDocument();
+    expect(await screen.findByDisplayValue("Inventory")).toBeInTheDocument();
 
-    expect(
-      screen.getByDisplayValue("Manager"),
-    ).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Manager")).toBeInTheDocument();
 
-    expect(
-      screen.getByDisplayValue("manager@example.com"),
-    ).toBeInTheDocument();
+    expect(screen.getByDisplayValue("manager@example.com")).toBeInTheDocument();
 
-    expect(
-      screen.getByDisplayValue("+91 9876543210"),
-    ).toBeInTheDocument();
+    expect(screen.getByDisplayValue("+91 9876543210")).toBeInTheDocument();
 
-    expect(
-      screen.getByDisplayValue("Inventory Manager"),
-    ).toBeInTheDocument();
+    expect(screen.getByDisplayValue("Inventory Manager")).toBeInTheDocument();
   });
 
   test("shows validation errors when required fields are empty", async () => {
@@ -75,21 +88,13 @@ describe("Profile component", () => {
       await screen.findByText(/first name is required/i),
     ).toBeInTheDocument();
 
-    expect(
-      screen.getByText(/last name is required/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/last name is required/i)).toBeInTheDocument();
 
-    expect(
-      screen.getByText(/email is required/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/email is required/i)).toBeInTheDocument();
 
-    expect(
-      screen.getByText(/phone number is required/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/phone number is required/i)).toBeInTheDocument();
 
-    expect(
-      screen.getByText(/role is required/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/role is required/i)).toBeInTheDocument();
   });
 
   test("shows delete confirmation dialog", async () => {
@@ -99,15 +104,17 @@ describe("Profile component", () => {
 
     await screen.findByDisplayValue("Inventory");
 
-    await user.click(
-      screen.getByRole("button", {
-        name: /delete profile/i,
-      }),
-    );
+    const deleteProfileButton = screen.getByRole("button", {
+      name: /delete profile/i,
+    });
 
-    expect(
-      screen.getByRole("dialog"),
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(deleteProfileButton).toBeEnabled();
+    });
+
+    await user.click(deleteProfileButton);
+
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
 
     expect(
       screen.getByText(/are you sure you want to delete this profile/i),
@@ -133,11 +140,15 @@ describe("Profile component", () => {
 
     await screen.findByDisplayValue("Inventory");
 
-    await user.click(
-      screen.getByRole("button", {
-        name: /delete profile/i,
-      }),
-    );
+    const deleteProfileButton = screen.getByRole("button", {
+      name: /delete profile/i,
+    });
+
+    await waitFor(() => {
+      expect(deleteProfileButton).toBeEnabled();
+    });
+
+    await user.click(deleteProfileButton);
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
 
@@ -148,9 +159,7 @@ describe("Profile component", () => {
     );
 
     await waitFor(() => {
-      expect(
-        screen.queryByRole("dialog"),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     });
   });
 });
